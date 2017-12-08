@@ -1,23 +1,23 @@
 ---
-title: "example_anonymize"
-author: "Matthieu"
-date: "December 7, 2017"
+title: "Anonymising a full folder"
+date: "v1, December 7, 2017"
 output: html_document
 ---
 
 # Goal
 
-The simple function *ano()* will anonymise specified columns in a directory, using the ssh256 algorithm. It does:
+The simple function **ano()** will anonymise specified columns in a directory, using the *sha256* algorithm. It does:
 
- 1. Read all files with a given extension (extension = csv or dta)
- 2. Search for the coumns indicated by user (argument *cols_id*)
+ 1. Read all files with a given extension (**extension** = csv or dta)
+ 2. Search for the coumns indicated by user (argument **cols_id**)
  3. Use R digest::digest function, with algorithm *sha256*. NOTE: digest syays *Please note that this package is not meant to be used for cryptographic purposes *
  4. Write the files. Either overwrite, or write adding *ANO* in name
 
 Simply use the function:
 
 ```{r, eval=FALSE}
-ano(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=TRUE, trim=-1L)
+source("https://raw.githubusercontent.com/MatthieuStigler/anonymize_folder/master/anonymize_main.R")
+ano(dir, cols_id = c("pers", "address"))
 ```
 
 
