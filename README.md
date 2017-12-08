@@ -7,9 +7,11 @@ directory, using the *sha256* algorithm. It does:
 1.  Read all files with a given extension (**extension** = csv or dta)
 2.  Search for the coumns indicated by user (argument **cols\_id**)
 3.  Use R digest::digest function, with algorithm *sha256*. NOTE: digest
-    syays *Please note that this package is not meant to be used for
-    cryptographic purposes *
-4.  Write the files. Either overwrite, or write adding *ANO* in name
+    says *Please note that this package is not meant to be used for
+    cryptographic purposes*.
+4.  Write the files. Either in a newly created folder adding
+    \*\_ANONYMISED\*, or simply overwrite the files in original folder
+    (**overwrite**=TRUE)
 
 Simply use the function:
 
@@ -39,21 +41,21 @@ Check them:
     ## # A tibble: 3 x 3
     ##    pers      address       data
     ##   <chr>        <chr>      <dbl>
-    ## 1   Bob House Street -0.5715689
-    ## 2  John  Main Street -0.3773685
-    ## 3 Harry  Central Av. -0.6855229
+    ## 1   Bob House Street -0.9761767
+    ## 2  John  Main Street -1.7614878
+    ## 3 Harry  Central Av.  0.7321746
 
     file_2
 
     ## # A tibble: 6 x 3
-    ##   person  data       income
-    ##    <chr> <chr>        <dbl>
-    ## 1    Bob     h  0.792868098
-    ## 2    Bob     d  0.444978962
-    ## 3   John     q -1.264233523
-    ## 4   John     e  0.372662120
-    ## 5  Harry     t  0.061253504
-    ## 6  Harry     l  0.006592464
+    ##   person  data     income
+    ##    <chr> <chr>      <dbl>
+    ## 1    Bob     j  1.0356953
+    ## 2    Bob     f  1.7343948
+    ## 3   John     z  0.8855771
+    ## 4   John     a  1.1782688
+    ## 5  Harry     g  1.8430461
+    ## 6  Harry     r -0.2795634
 
 Write this dataset on your disk:
 
@@ -87,7 +89,7 @@ argument **trim**=12 just for seeing the output:
 
 Files have been written. Read now:
 
-    read_csv(path_1)
+    read_csv(paste(temp_dir, "_ANONYMISED/file_1.csv", sep=""))
 
     ## Parsed with column specification:
     ## cols(
@@ -99,11 +101,11 @@ Files have been written. Read now:
     ## # A tibble: 3 x 3
     ##           pers      address       data
     ##          <chr>        <chr>      <dbl>
-    ## 1 5022f23cb480 13fb303db61f -0.5715689
-    ## 2 632dc5c5235d a6da84335acf -0.3773685
-    ## 3 9ceb55e9ec3b bc8767157546 -0.6855229
+    ## 1 5022f23cb480 13fb303db61f -0.9761767
+    ## 2 632dc5c5235d a6da84335acf -1.7614878
+    ## 3 9ceb55e9ec3b bc8767157546  0.7321746
 
-    read_csv(path_2)
+    read_csv(paste(temp_dir, "_ANONYMISED/file_2.csv", sep=""))
 
     ## Parsed with column specification:
     ## cols(
@@ -115,9 +117,9 @@ Files have been written. Read now:
     ## # A tibble: 6 x 3
     ##         person  data       income
     ##          <chr> <chr>        <chr>
-    ## 1 5022f23cb480     h f98cbd606de6
-    ## 2 5022f23cb480     d c22a697f4bc9
-    ## 3 632dc5c5235d     q 90248b48d7c7
-    ## 4 632dc5c5235d     e 05bbd1392c6b
-    ## 5 9ceb55e9ec3b     t b92132c3cc2a
-    ## 6 9ceb55e9ec3b     l a4e046cff2e8
+    ## 1 5022f23cb480     j e837e24e188d
+    ## 2 5022f23cb480     f 43e0045b8690
+    ## 3 632dc5c5235d     z 7fa23ab447d6
+    ## 4 632dc5c5235d     a aca2d6c02dce
+    ## 5 9ceb55e9ec3b     g 03deca6d7a45
+    ## 6 9ceb55e9ec3b     r 8a9c8a06fea3

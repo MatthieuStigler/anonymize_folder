@@ -10,8 +10,8 @@ The simple function **ano()** will anonymise specified columns in a directory, u
 
  1. Read all files with a given extension (**extension** = csv or dta)
  2. Search for the coumns indicated by user (argument **cols_id**)
- 3. Use R digest::digest function, with algorithm *sha256*. NOTE: digest syays *Please note that this package is not meant to be used for cryptographic purposes *
- 4. Write the files. Either overwrite, or write adding *ANO* in name
+ 3. Use R digest::digest function, with algorithm *sha256*. NOTE: digest says *Please note that this package is not meant to be used for cryptographic purposes*.
+ 4. Write the files. Either in a newly created  folder adding *_ANONYMISED*, or simply overwrite the files in original folder (**overwrite**=TRUE)
 
 Simply use the function:
 
@@ -68,7 +68,7 @@ ano(dir=temp_dir, cols_id = c("pers", "address", "person", "income"), trim=12)
 Files have been written. Read now:
 
 ```{r}
-read_csv(path_1)
-read_csv(path_2)
+read_csv(paste(temp_dir, "_ANONYMISED/file_1.csv", sep=""))
+read_csv(paste(temp_dir, "_ANONYMISED/file_2.csv", sep=""))
 ```
 
