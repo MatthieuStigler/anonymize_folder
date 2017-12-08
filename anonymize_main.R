@@ -35,7 +35,7 @@ ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), o
     mutate(data =map2(data, colnames, ~mutate_at(.x, vars(unlist(.y)), digest_vect, trim)))
 
   ## write results
-  files_df_clean %>%
+  out <- files_df_clean %>%
     {map2(.$filename_out, .$data, ~write_fun(.y, .x))}
     
   
