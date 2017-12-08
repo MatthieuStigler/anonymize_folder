@@ -11,15 +11,16 @@ digest_vect <- function(x, trim=-1L, algo="sha256") map_chr(x, ~digest(., algo=a
 
 
 ## main function
-ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=FALSE, trim=-1L, algo="sha256"){
+ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta", "shp"), overwrite=FALSE, trim=-1L, algo="sha256"){
   extension <- match.arg(extension)
   if(extension=="dta") require(haven)
+  if(extension=="shp") require(sf)
   ext_full <- paste(extension, "$", sep="") # regexp: ends with extension
   files <- list.files(dir, recursive = TRUE, full.names = TRUE, pattern=ext_full)
   
   ## read/write functions
-  read_fun <- switch(extension, "csv"= read_csv, "dta"=read_dta)
-  write_fun <- switch(extension, "csv"= write_csv, "dta"=write_dta)
+  read_fun <- switch(extension, "csv"= read_csv, "dta"=read_dta, "shp"=st_read)
+  write_fun <- switch(extension, "csv"= write_csv, "dta"=write_dta, "shp"=st_write)
   
   ## read, extract cols, find relevant cols
   new_dir <- if(overwrite) dir else paste(dir, "ANONYMISED", sep="_")

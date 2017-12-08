@@ -6,12 +6,12 @@ output: md_document
 
 # Goal: anonymise a full folder in one single line
 
-The simple function **ano()** will anonymise specified columns in a directory, using the [SHA-2](https://en.wikipedia.org/wiki/SHA-2) algorithm. The SHA-2 is a deterministic hash funciton. This is used because same key might appear in several files, preventing from using simple stochastic keys. As such, original names could be found by brute force. Using sha256, one needs 2^32 = 4 billions, while for 
-sha512, it is 2^64 = 1.8 e+19.
+The simple function **ano()** will anonymise specified columns in a directory, using the [SHA-2](https://en.wikipedia.org/wiki/SHA-2) algorithm. The SHA-2 is a deterministic hash funciton. This is used because same key might appear in several files, preventing from using simple stochastic keys. As such, original names could be found by brute force. Using *sha256*, one needs 2^32 = 4 billions, while for 
+*sha512*, it is 2^64 = 1.8 e+19.
 
 The funciton does:
 
- 1. Read all files with a given extension (**extension** = csv or dta)
+ 1. Read all files with a given extension (**extension** = csv, dta or shp)
  2. Search for the coumns indicated by user (argument **cols_id**)
  3. Use R [digest::digest](https://www.rdocumentation.org/packages/digest/versions/0.6.12/topics/digest) function, with **algo**= *sha256*.
  4. Write the files. Either in a newly created  folder adding *_ANONYMISED*, or simply overwrite the files in original folder (**overwrite**=TRUE)
