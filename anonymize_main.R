@@ -3,7 +3,7 @@ library(tidyverse)
 # library(magrittr)
 
 ## utility function: vectorized digest
-digest_vect <- function(x, trim=-1L) map_chr(x, ~digest(., algo="sha256")) %>%
+digest_vect <- function(x, trim=-1L, algo="sha256") map_chr(x, ~digest(., algo=algo)) %>%
   str_sub(end=trim)
 
 ## quick check
@@ -11,7 +11,7 @@ digest_vect <- function(x, trim=-1L) map_chr(x, ~digest(., algo="sha256")) %>%
 
 
 ## main function
-ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=FALSE, trim=-1L){
+ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=FALSE, trim=-1L, algo="sha256"){
   extension <- match.arg(extension)
   if(extension=="dta") require(haven)
   ext_full <- paste(extension, "$", sep="") # regexp: ends with extension
@@ -32,7 +32,7 @@ ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), o
 
   ## ano each: overwrite data
   files_df_clean <- files_df %>%
-    mutate(data =map2(data, colnames, ~mutate_at(.x, vars(unlist(.y)), digest_vect, trim)))
+    mutate(data =map2(data, colnames, ~mutate_at(.x, vars(unlist(.y)), digest_vect, trim=trim, algo=algo)))
 
   ## write results
   out <- files_df_clean %>%
@@ -62,9 +62,13 @@ if(FALSE){
   read_csv(path_2)
   
   # anonymise csv file
-  ano(dir=temp_dir, cols_id = c("pers", "address", "person", "income"), trim=12)
+  ano(dir=temp_dir, cols_id = c("pers", "address", "person", "income"),  algo="sha256")
   
-  ## check
+  #
+  read_csv(paste(temp_dir, "_ANONYMISED/file_1.csv", sep=""))
+  read_csv(paste(temp_dir, "_ANONYMISED/file_2.csv", sep=""))
+  
+  ## check if overwrite=TRUE
   read_csv(path_1)
   read_csv(path_2)
   

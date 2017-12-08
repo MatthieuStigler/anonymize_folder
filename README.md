@@ -2,13 +2,20 @@ Goal: anonymise a full folder in one single line
 ================================================
 
 The simple function **ano()** will anonymise specified columns in a
-directory, using the *sha256* algorithm. It does:
+directory, using the [SHA-2](https://en.wikipedia.org/wiki/SHA-2)
+algorithm. The SHA-2 is a deterministic hash funciton. This is used
+because same key might appear in several files, preventing from using
+simple stochastic keys. As such, original names could be found by brute
+force. Using sha256, one needs 2^32 = 4 billions, while for sha512, it
+is 2^64 = 1.8 e+19.
+
+The funciton does:
 
 1.  Read all files with a given extension (**extension** = csv or dta)
 2.  Search for the coumns indicated by user (argument **cols\_id**)
-3.  Use R digest::digest function, with algorithm *sha256*. NOTE: digest
-    says *Please note that this package is not meant to be used for
-    cryptographic purposes*.
+3.  Use R
+    [digest::digest](https://www.rdocumentation.org/packages/digest/versions/0.6.12/topics/digest)
+    function, with **algo**= *sha256*.
 4.  Write the files. Either in a newly created folder adding
     \*\_ANONYMISED\*, or simply overwrite the files in original folder
     (**overwrite**=TRUE)
@@ -41,21 +48,21 @@ Check them:
     ## # A tibble: 3 x 3
     ##    pers      address       data
     ##   <chr>        <chr>      <dbl>
-    ## 1   Bob House Street -0.9761767
-    ## 2  John  Main Street -1.7614878
-    ## 3 Harry  Central Av.  0.7321746
+    ## 1   Bob House Street -0.9294301
+    ## 2  John  Main Street  0.3340140
+    ## 3 Harry  Central Av.  0.1256490
 
     file_2
 
     ## # A tibble: 6 x 3
     ##   person  data     income
     ##    <chr> <chr>      <dbl>
-    ## 1    Bob     j  1.0356953
-    ## 2    Bob     f  1.7343948
-    ## 3   John     z  0.8855771
-    ## 4   John     a  1.1782688
-    ## 5  Harry     g  1.8430461
-    ## 6  Harry     r -0.2795634
+    ## 1    Bob     m -1.7055573
+    ## 2    Bob     t  0.7182128
+    ## 3   John     h  0.1563680
+    ## 4   John     g  0.8255275
+    ## 5  Harry     f -1.3313323
+    ## 6  Harry     i  0.1820262
 
 Write this dataset on your disk:
 
@@ -101,9 +108,9 @@ Files have been written. Read now:
     ## # A tibble: 3 x 3
     ##           pers      address       data
     ##          <chr>        <chr>      <dbl>
-    ## 1 5022f23cb480 13fb303db61f -0.9761767
-    ## 2 632dc5c5235d a6da84335acf -1.7614878
-    ## 3 9ceb55e9ec3b bc8767157546  0.7321746
+    ## 1 5022f23cb480 13fb303db61f -0.9294301
+    ## 2 632dc5c5235d a6da84335acf  0.3340140
+    ## 3 9ceb55e9ec3b bc8767157546  0.1256490
 
     read_csv(paste(temp_dir, "_ANONYMISED/file_2.csv", sep=""))
 
@@ -117,9 +124,9 @@ Files have been written. Read now:
     ## # A tibble: 6 x 3
     ##         person  data       income
     ##          <chr> <chr>        <chr>
-    ## 1 5022f23cb480     j e837e24e188d
-    ## 2 5022f23cb480     f 43e0045b8690
-    ## 3 632dc5c5235d     z 7fa23ab447d6
-    ## 4 632dc5c5235d     a aca2d6c02dce
-    ## 5 9ceb55e9ec3b     g 03deca6d7a45
-    ## 6 9ceb55e9ec3b     r 8a9c8a06fea3
+    ## 1 5022f23cb480     m 532d01235861
+    ## 2 5022f23cb480     t 087b24efb027
+    ## 3 632dc5c5235d     h 2a069145d6af
+    ## 4 632dc5c5235d     g a466504cb7a6
+    ## 5 9ceb55e9ec3b     f b7cb1de98524
+    ## 6 9ceb55e9ec3b     i 190dc6804af6
