@@ -1,0 +1,74 @@
+---
+title: "example_anonymize"
+author: "Matthieu"
+date: "December 7, 2017"
+output: html_document
+---
+
+# Goal
+
+The simple function *ano()* will anonymise specified columns in a directory, using the ssh256 algorithm. It does:
+
+ 1. Read all files with a given extension (extension = csv or dta)
+ 2. Search for the coumns indicated by user (argument *cols_id*)
+ 3. Use R digest::digest function, with algorithm *sha256*. NOTE: digest syays *Please note that this package is not meant to be used for cryptographic purposes *
+ 4. Write the files. Either overwrite, or write adding *ANO* in name
+
+Simply use the function:
+
+```{r, eval=FALSE}
+ano(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=TRUE, trim=-1L)
+```
+
+
+
+## Example 
+
+### Load the function
+```{r, message=FALSE}
+source("https://raw.githubusercontent.com/MatthieuStigler/anonymize_folder/master/anonymize_main.R")
+```
+
+
+### Create fake dataset
+
+```{r}
+library(tidyverse)
+names <- c("Bob", "John", "Harry")
+address <- c("House Street", "Main Street", "Central Av.")
+file_1 <- data_frame(pers = names, address=address, data=rnorm(3))
+file_2 <- data_frame(person = rep(names,each=2), data=sample(letters, size=6),
+                     income=rnorm(6))
+```
+
+Check them:
+
+```{r}
+file_1
+file_2
+```
+
+Write this dataset on your disk:
+
+```{r}
+temp_dir <- tempdir()
+path_1 <- paste(temp_dir, "file_1.csv", sep="/")
+path_2 <- paste(temp_dir, "file_2.csv", sep="/")
+write_csv(file_1, path_1)
+write_csv(file_2, path_2)
+```
+
+## test the function
+
+Here the cols are pers, person, address and income. We specify the argument **trim**=12 just for seeing the output:
+```{r}
+ano(dir=temp_dir, cols_id = c("pers", "address", "person", "income"), trim=12)
+```
+
+Files have been written. Read now:
+
+```{r}
+read_csv(path_1)
+read_csv(path_2)
+```
+
