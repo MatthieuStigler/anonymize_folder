@@ -1,10 +1,10 @@
 ---
 title: "Anonymising a full folder"
 date: "v1, December 7, 2017"
-output: html_document
+output: md_document
 ---
 
-# Goal
+# Goal: anonymise a full folder in one single line
 
 The simple function **ano()** will anonymise specified columns in a directory, using the *sha256* algorithm. It does:
 
