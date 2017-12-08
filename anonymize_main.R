@@ -11,7 +11,7 @@ digest_vect <- function(x, trim=-1L) map_chr(x, ~digest(., algo="sha256")) %>%
 
 
 ## main function
-ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=TRUE, trim=-1L){
+ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), overwrite=FALSE, trim=-1L){
   extension <- match.arg(extension)
   if(extension=="dta") require(haven)
   ext_full <- paste(extension, "$", sep="") # regexp: ends with extension
@@ -22,10 +22,10 @@ ano <- function(dir, cols_id = c("pers", "address"), extension=c("csv","dta"), o
   write_fun <- switch(extension, "csv"= write_csv, "dta"=write_dta)
   
   ## read, extract cols, find relevant cols
+  new_dir <- if(overwrite) dir else paste(dir, "ANONYMISED", sep="_")
+  if(!overwrite) dir.create(new_dir)
   files_df <- data_frame(filename = files, 
-                         filename_out = if(overwrite) filename else str_replace(filename, 
-                                                                                paste("\\.", ext_full, sep=""), 
-                                                                                paste("ANO\\.", ext_full, sep="")),
+                         filename_out = if(overwrite) filename else str_replace(filename, dir, new_dir),
                          data=map(filename, read_fun), 
                          colnames=map(data, ~data_frame(cols=colnames(.)) %>%
                                         filter(cols %in% cols_id)))
@@ -69,7 +69,7 @@ if(FALSE){
   read_csv(path_2)
   
   
-  
+### Try STATA  
   library(haven)
   path_1_dta <- paste(temp_dir, "file_1.dta", sep="/")
   path_2_dta <- paste(temp_dir, "file_2.dta", sep="/")
